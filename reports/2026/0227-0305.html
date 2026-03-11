@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商务部周数据报告 2026.02.27 — 2026.03.05</title>
+<style>
+  @page { size: A4; margin: 20mm 15mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    color: #1a1a2e;
+    background: #f0f2f5;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+  @media print {
+    body { background: #fff; }
+    .container { padding: 0; max-width: 100%; }
+    .section { break-inside: avoid; }
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff; padding: 40px 48px; border-radius: 16px;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+  .header::after {
+    content: ''; position: absolute; top: -50%; right: -20%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(83,178,235,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; position: relative; z-index: 1; }
+  .header .subtitle { font-size: 15px; color: rgba(255,255,255,0.7); font-weight: 400; position: relative; z-index: 1; }
+  .section {
+    background: #fff; border-radius: 12px; padding: 32px 36px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .section-title {
+    font-size: 18px; font-weight: 700; color: #1a1a2e;
+    margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e8ecf1;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px; font-size: 16px; flex-shrink: 0;
+  }
+  .icon-blue { background: #e8f4fd; color: #1976d2; }
+  .icon-green { background: #e8f5e9; color: #2e7d32; }
+  .sub-title { font-size: 14px; font-weight: 600; color: #546e7a; margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 1px; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; margin-bottom: 16px; }
+  thead th {
+    background: #f5f7fa; color: #455a64; font-weight: 600; padding: 10px 14px;
+    text-align: right; white-space: nowrap; border-bottom: 2px solid #dee2e6;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  thead th:first-child { text-align: center; border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td { padding: 10px 14px; text-align: right; border-bottom: 1px solid #f0f0f0; color: #37474f; }
+  tbody td:first-child { text-align: center; font-weight: 600; color: #1a1a2e; }
+  tbody tr:hover { background: #fafbfc; }
+  tbody tr:last-child td { border-bottom: none; }
+  .highlight { font-weight: 700; color: #1565c0; }
+  .highlight-total { font-weight: 700; color: #0d47a1; font-size: 14px; }
+  .name-badge { display: inline-block; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; }
+  .badge-captain { background: #fff3e0; color: #e65100; }
+  .badge-eliz { background: #e8f5e9; color: #2e7d32; }
+  .badge-if { background: #e3f2fd; color: #1565c0; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat-card {
+    background: linear-gradient(135deg, #f8f9fa, #fff);
+    border: 1px solid #e8ecf1; border-radius: 10px; padding: 18px 20px; text-align: center;
+  }
+  .stat-card .stat-name { font-size: 12px; color: #78909c; font-weight: 500; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .stat-value { font-size: 24px; font-weight: 700; color: #1a1a2e; }
+  .stat-card .stat-label { font-size: 11px; color: #90a4ae; margin-top: 2px; }
+  .footer { text-align: center; padding: 20px; color: #b0bec5; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>商务部周数据报告</h1>
+    <div class="subtitle">2026年2月27日 — 2026年3月5日</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="icon icon-blue">📊</span>
+      一、商务团队积分统计
+    </div>
+
+    <div class="sub-title">1.1 本周积分（2.27 - 3.5）</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">商务经理</th>
+          <th>周积分合计</th><th>普通卡销售</th><th>客户消费</th><th>KOL 销售</th><th>白标卡销售</th><th>API 对接费</th><th>绑卡销售</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="name-badge badge-captain">船长</span></td>
+          <td class="highlight-total">139.00</td>
+          <td>0</td><td>0.00</td><td>139</td><td>0</td><td>0</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-eliz">Eliz</span></td>
+          <td class="highlight-total">3,132.26</td>
+          <td>0</td><td>0.26</td><td>132</td><td>3,000</td><td>0</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-if">IF</span></td>
+          <td class="highlight-total">0.00</td>
+          <td>0</td><td>0.00</td><td>0</td><td>0</td><td>0</td><td>0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">1.2 本月累计积分（2月）</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">商务经理</th>
+          <th>月累计积分</th><th>普通卡销售</th><th>客户消费</th><th>KOL 销售</th><th>白标卡销售</th><th>API 对接费</th><th>绑卡销售</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="name-badge badge-captain">船长</span></td>
+          <td class="highlight-total">139.00</td>
+          <td>0</td><td>0.00</td><td>139</td><td>0</td><td>0</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-eliz">Eliz</span></td>
+          <td class="highlight-total">3,132.26</td>
+          <td>0</td><td>0.26</td><td>132</td><td>3,000</td><td>0</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-if">IF</span></td>
+          <td class="highlight-total">0.00</td>
+          <td>0</td><td>0.00</td><td>0</td><td>0</td><td>0</td><td>0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-title">1.3 历史累计积分（截至 3.5）</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">商务经理</th>
+          <th>累计总积分</th><th>普通卡销售</th><th>客户消费</th><th>KOL 销售</th><th>白标卡销售</th><th>API 对接费</th><th>绑卡销售</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="name-badge badge-captain">船长</span></td>
+          <td class="highlight-total">9,925.16</td>
+          <td>1,302</td><td>12.16</td><td>1,511</td><td>6,000</td><td>1,100</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-eliz">Eliz</span></td>
+          <td class="highlight-total">26,391.80</td>
+          <td>5,446</td><td>168.80</td><td>5,237</td><td>12,040</td><td>3,500</td><td>0</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-if">IF</span></td>
+          <td class="highlight-total">13,443.00</td>
+          <td>2,370</td><td>0.00</td><td>73</td><td>11,000</td><td>0</td><td>0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="icon icon-green">📈</span>
+      二、本周商务部 KOL 贡献（2.27 - 3.5）
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-name">船长</div>
+        <div class="stat-value">68</div>
+        <div class="stat-label">本周开卡数 | KOL 积分 139</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">Eliz</div>
+        <div class="stat-value">48</div>
+        <div class="stat-label">本周开卡数 | KOL 积分 132</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">IF</div>
+        <div class="stat-value">0</div>
+        <div class="stat-label">本周开卡数 | KOL 积分 0</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">商务经理</th>
+          <th>本周开卡用户数</th><th>本周开卡数</th><th>实体卡</th><th>虚拟卡</th><th>KOL 积分</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="name-badge badge-captain">船长</span></td>
+          <td>4814</td><td class="highlight">68</td><td>1</td><td>67</td><td class="highlight">139</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-eliz">Eliz</span></td>
+          <td>15876</td><td class="highlight">48</td><td>12</td><td>36</td><td class="highlight">132</td>
+        </tr>
+        <tr>
+          <td><span class="name-badge badge-if">IF</span></td>
+          <td>200</td><td class="highlight">0</td><td>0</td><td>0</td><td class="highlight">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    本报告由数据自动化系统生成 &nbsp;|&nbsp; 数据周期：2026.02.27 — 2026.03.05
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "source_data_dir": "/Users/karmen/Desktop/vscode 分析/报表自动化/商务部数据/源数据",
+  "email_mapping": {
+    "z1990511@126.com": "船长",
+    "tongzhao1799@gmail.com": "Eliz",
+    "aurorayouzhi@qq.com": "IF"
+  },
+  "bd_list": ["船长", "Eliz", "IF"],
+  "badge_classes": {
+    "船长": "badge-captain",
+    "Eliz": "badge-eliz",
+    "IF": "badge-if"
+  },
+  "kol_scoring": {
+    "physical_card_points": 5,
+    "virtual_card_points": 2
+  },
+  "consumer_spending_rate": 0.003,
+  "special_record_file": "特殊计分记录.xlsx",
+  "kol_id_sheet": "KOL-ID",
+  "file_patterns": {
+    "transaction": "商务交易{period}.xlsx",
+    "card_opening": "商务开卡{period}.xlsx",
+    "kol": "KOL{period}.xlsx"
+  }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tevau 商务部周报</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f0f2f5; color: #1a1a2e; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .container { max-width: 480px; width: 100%; padding: 40px 20px; }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff; padding: 36px; border-radius: 16px; margin-bottom: 24px; text-align: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .reports {
+    background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .reports-title { padding: 16px 20px; font-size: 13px; color: #78909c; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f0f0f0; }
+  .report-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; color: #1a1a2e; text-decoration: none;
+    border-bottom: 1px solid #f5f5f5; transition: background 0.15s;
+  }
+  .report-link:hover { background: #f8f9fa; }
+  .report-link:last-child { border-bottom: none; }
+  .report-link .date { font-size: 14px; font-weight: 500; }
+  .badge-latest {
+    font-size: 11px; background: #e8f5e9; color: #2e7d32;
+    padding: 2px 10px; border-radius: 12px; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>商务部周报</h1>
+    <p>Tevau Business Department Weekly Reports</p>
+  </div>
+  <div class="reports">
+    <div class="reports-title">历史报告</div>
+      <a href="reports/2026/0227-0305.html" class="report-link">
+        <span class="date">2026.02.27 — 2026.03.05</span>
+        <span class="badge-latest">最新</span>
+      </a>
+  </div>
+</div>
+</body>
+</html>
