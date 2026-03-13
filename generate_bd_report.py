@@ -21,6 +21,7 @@ except ImportError:
 SCRIPT_DIR = Path(__file__).parent
 CONFIG_FILE = SCRIPT_DIR / "config.json"
 CUMULATIVE_FILE = SCRIPT_DIR / "cumulative.json"
+MONTHLY_FILE = SCRIPT_DIR / "monthly.json"
 REPORTS_DIR = SCRIPT_DIR / "reports"
 
 SCORE_CATEGORIES = ["普通卡销售", "客户消费", "KOL销售", "白标卡销售", "API对接费", "卡面设计", "绑卡销售"]
@@ -38,6 +39,16 @@ def load_cumulative():
 
 def save_cumulative(data):
     with open(CUMULATIVE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def load_monthly():
+    with open(MONTHLY_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_monthly(data):
+    with open(MONTHLY_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
@@ -187,8 +198,13 @@ def calc_kol_sales(source_dir, period, config):
     return result
 
 
-def calc_special_scores(source_dir, config, start_date, end_date):
-    """Calculate 白标卡/API/卡面设计/绑卡 from 特殊计分记录."""
+def calc_special_scores(source_dir, config, start_date, end_date, mode="week"):
+    """Calculate 白标卡/API/卡面设计/绑卡 from 特殊计分记录.
+
+    mode="week": only records within [start_date, end_date]
+    mode="cumulative": all records up to end_date (for historical total)
+    mode="monthly": all records in end_date's month up to end_date
+    """
     special_file = os.path.join(source_dir, config["special_record_file"])
     if not os.path.exists(special_file):
         return {bd: {"白标卡销售": 0, "API对接费": 0, "卡面设计": 0, "绑卡销售": 0} for bd in config["bd_list"]}
@@ -196,8 +212,14 @@ def calc_special_scores(source_dir, config, start_date, end_date):
     wb = openpyxl.load_workbook(special_file, data_only=True)
     result = {bd: {"白标卡销售": 0, "API对接费": 0, "卡面设计": 0, "绑卡销售": 0} for bd in config["bd_list"]}
 
-    # Determine which month sheets to read (handle cross-month periods)
-    months_to_check = list(set([start_date.month, end_date.month]))
+    # Determine which month sheets to scan
+    if mode == "cumulative":
+        months_to_check = list(range(1, end_date.month + 1))
+    elif mode == "monthly":
+        months_to_check = [end_date.month]
+    else:
+        months_to_check = list(set([start_date.month, end_date.month]))
+
     category_map = {
         "白标卡": "白标卡销售",
         "API": "API对接费",
@@ -229,14 +251,10 @@ def calc_special_scores(source_dir, config, start_date, end_date):
             try:
                 score = float(score) if score is not None else 0
             except (ValueError, TypeError):
-                # If score is a formula string (data_only didn't resolve), try manual calc
                 score_str = str(score)
                 if score_str.startswith("=") and "*" in score_str:
-                    # Handle simple formulas like =3*E2 → multiply parts
                     try:
-                        # Get quantity from column E (index 4) of this row
                         quantity = float(row[4] or 0)
-                        # Extract multiplier from formula (e.g., "=3*E2" → 3)
                         multiplier = float(score_str.split("*")[0].replace("=", ""))
                         score = multiplier * quantity
                     except (ValueError, IndexError):
@@ -252,8 +270,16 @@ def calc_special_scores(source_dir, config, start_date, end_date):
                         d_month = int(parts[0])
                         d_day = int(parts[1])
                         d = datetime(start_date.year, d_month, d_day)
-                        if start_date <= d <= end_date:
-                            result[bd][mapped_cat] += score
+                        # Apply date filter based on mode
+                        if mode == "week":
+                            if start_date <= d <= end_date:
+                                result[bd][mapped_cat] += score
+                        elif mode == "cumulative":
+                            if d <= end_date:
+                                result[bd][mapped_cat] += score
+                        elif mode == "monthly":
+                            if d.month == end_date.month and d <= end_date:
+                                result[bd][mapped_cat] += score
                     except (ValueError, IndexError):
                         result[bd][mapped_cat] += score
 
@@ -678,7 +704,8 @@ def main():
     spending = calc_consumer_spending(source_dir, period, config)
     cards = calc_card_sales(source_dir, period, config)
     kol = calc_kol_sales(source_dir, period, config)
-    special = calc_special_scores(source_dir, config, start_date, end_date)
+    special_week = calc_special_scores(source_dir, config, start_date, end_date, mode="week")
+    special_month = calc_special_scores(source_dir, config, start_date, end_date, mode="monthly")
 
     # 2. Assemble weekly scores
     weekly_scores = {}
@@ -687,10 +714,10 @@ def main():
             "普通卡销售": cards[bd]["score"],
             "客户消费": round(spending[bd]["score"], 2),
             "KOL销售": kol[bd]["total_score"],
-            "白标卡销售": special[bd]["白标卡销售"],
-            "API对接费": special[bd]["API对接费"],
-            "卡面设计": special[bd]["卡面设计"],
-            "绑卡销售": special[bd]["绑卡销售"],
+            "白标卡销售": special_week[bd]["白标卡销售"],
+            "API对接费": special_week[bd]["API对接费"],
+            "卡面设计": special_week[bd]["卡面设计"],
+            "绑卡销售": special_week[bd]["绑卡销售"],
         }
 
     # 3. Print weekly scores summary
@@ -701,8 +728,9 @@ def main():
         print(f"  {bd:6s}: {total:>10,.2f} 分")
     print(f"{'─'*40}")
 
-    # 4. Load cumulative and update
+    # 4. Load cumulative and update (incremental for all categories)
     cumul_data = load_cumulative()
+    SPECIAL_CATS = ["白标卡销售", "API对接费", "卡面设计", "绑卡销售"]
     cumulative = {}
     for bd in config["bd_list"]:
         prev = cumul_data["data"].get(bd, {cat: 0 for cat in SCORE_CATEGORIES})
@@ -710,10 +738,30 @@ def main():
         for cat in SCORE_CATEGORIES:
             cumulative[bd][cat] = prev.get(cat, 0) + weekly_scores[bd].get(cat, 0)
 
-    # 5. Monthly scores (for now = weekly if first week of month, otherwise need prior weeks)
-    # Simple approach: monthly = cumulative_new - cumulative at month start
-    # For simplicity, we'll use weekly as monthly if it's the first report of the month
-    monthly_scores = weekly_scores  # TODO: accumulate across weeks within same month
+    # 5. Monthly scores — load monthly.json and accumulate
+    monthly_data = load_monthly()
+    report_month = end_date.month
+    report_year = end_date.year
+
+    # If month changed, reset monthly accumulator
+    if monthly_data["year"] != report_year or monthly_data["month"] != report_month:
+        monthly_data = {
+            "year": report_year,
+            "month": report_month,
+            "data": {bd: {cat: 0 for cat in SCORE_CATEGORIES} for bd in config["bd_list"]}
+        }
+
+    monthly_scores = {}
+    for bd in config["bd_list"]:
+        prev_month = monthly_data["data"].get(bd, {cat: 0 for cat in SCORE_CATEGORIES})
+        monthly_scores[bd] = {}
+        for cat in SCORE_CATEGORIES:
+            if cat in SPECIAL_CATS:
+                # For special cats, use full month scan (always accurate, catches retroactive adds)
+                monthly_scores[bd][cat] = special_month[bd].get(cat, 0)
+            else:
+                # For regular cats, accumulate from previous weeks in this month
+                monthly_scores[bd][cat] = prev_month.get(cat, 0) + weekly_scores[bd].get(cat, 0)
 
     # 6. KOL data for report
     kol_data = {bd: kol[bd] for bd in config["bd_list"]}
@@ -749,6 +797,13 @@ def main():
     cumul_data["data"] = cumulative
     save_cumulative(cumul_data)
     print(f"  ✓ cumulative.json (历史累计已更新)")
+
+    # 9. Update monthly data
+    monthly_data["year"] = report_year
+    monthly_data["month"] = report_month
+    monthly_data["data"] = monthly_scores
+    save_monthly(monthly_data)
+    print(f"  ✓ monthly.json (月累计已更新)")
 
     # 9. Push to GitHub if requested
     if args.push:
