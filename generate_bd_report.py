@@ -24,7 +24,7 @@ CUMULATIVE_FILE = SCRIPT_DIR / "cumulative.json"
 MONTHLY_FILE = SCRIPT_DIR / "monthly.json"
 REPORTS_DIR = SCRIPT_DIR / "reports"
 
-SCORE_CATEGORIES = ["普通卡销售", "客户消费", "KOL销售", "白标卡销售", "API对接费", "卡面设计", "绑卡销售"]
+SCORE_CATEGORIES = ["普通卡销售", "客户消费", "KOL销售", "白标卡销售", "API对接费", "卡面设计", "绑卡销售", "手机销售"]
 
 
 def load_config():
@@ -326,7 +326,7 @@ def generate_html(weekly_scores, monthly_scores, cumulative, kol_data, config, s
         return f"""        <tr>
           <td><span class="name-badge {badge[bd]}">{bd}</span></td>
           <td class="highlight-total">{fmt(total, 2)}</td>
-          <td>{fmt(scores.get('普通卡销售', 0))}</td><td>{fmt(scores.get('客户消费', 0), 2)}</td><td>{fmt(scores.get('KOL销售', 0))}</td><td>{fmt(scores.get('白标卡销售', 0))}</td><td>{fmt(scores.get('API对接费', 0))}</td><td>{fmt(scores.get('绑卡销售', 0))}</td>
+          <td>{fmt(scores.get('普通卡销售', 0))}</td><td>{fmt(scores.get('客户消费', 0), 2)}</td><td>{fmt(scores.get('KOL销售', 0))}</td><td>{fmt(scores.get('白标卡销售', 0))}</td><td>{fmt(scores.get('API对接费', 0))}</td><td>{fmt(scores.get('绑卡销售', 0))}</td><td>{fmt(scores.get('手机销售', 0))}</td>
         </tr>"""
 
     weekly_rows = "\n".join(score_row(bd, weekly_scores[bd]) for bd in bd_list)
@@ -474,7 +474,7 @@ def generate_html(weekly_scores, monthly_scores, cumulative, kol_data, config, s
       <thead>
         <tr>
           <th style="text-align:center">商务经理</th>
-          <th>累计总积分</th><th>普通卡销售</th><th>客户消费</th><th>KOL 销售</th><th>白标卡销售</th><th>API 对接费</th><th>绑卡销售</th>
+          <th>累计总积分</th><th>普通卡销售</th><th>客户消费</th><th>KOL 销售</th><th>白标卡销售</th><th>API 对接费</th><th>绑卡销售</th><th>手机销售</th>
         </tr>
       </thead>
       <tbody>
@@ -526,6 +526,10 @@ def generate_md(weekly_scores, monthly_scores, cumulative, kol_data, config, sta
         total = sum(scores.get(cat, 0) for cat in SCORE_CATEGORIES)
         return f"| **{bd}** | **{fmt(total, 2)}** | {fmt(scores.get('普通卡销售', 0))} | {fmt(scores.get('客户消费', 0), 2)} | {fmt(scores.get('KOL销售', 0))} | {fmt(scores.get('白标卡销售', 0))} | {fmt(scores.get('API对接费', 0))} | {fmt(scores.get('绑卡销售', 0))} |"
 
+    def cumul_line(bd, scores):
+        total = sum(scores.get(cat, 0) for cat in SCORE_CATEGORIES)
+        return f"| **{bd}** | **{fmt(total, 2)}** | {fmt(scores.get('普通卡销售', 0))} | {fmt(scores.get('客户消费', 0), 2)} | {fmt(scores.get('KOL销售', 0))} | {fmt(scores.get('白标卡销售', 0))} | {fmt(scores.get('API对接费', 0))} | {fmt(scores.get('绑卡销售', 0))} | {fmt(scores.get('手机销售', 0))} |"
+
     lines = [
         f"# 商务部周数据报告",
         f"**{start_str} — {end_str}**",
@@ -556,11 +560,11 @@ def generate_md(weekly_scores, monthly_scores, cumulative, kol_data, config, sta
         "",
         f"### 1.3 历史累计积分（截至 {end_date.month}.{end_date.day}）",
         "",
-        "| 商务经理 | 累计总积分 | 普通卡销售 | 客户消费 | KOL 销售 | 白标卡销售 | API 对接费 | 绑卡销售 |",
-        "|:--------:|-----------:|----------:|---------:|---------:|----------:|----------:|---------:|",
+        "| 商务经理 | 累计总积分 | 普通卡销售 | 客户消费 | KOL 销售 | 白标卡销售 | API 对接费 | 绑卡销售 | 手机销售 |",
+        "|:--------:|-----------:|----------:|---------:|---------:|----------:|----------:|---------:|---------:|",
     ]
     for bd in bd_list:
-        lines.append(score_line(bd, cumulative[bd]))
+        lines.append(cumul_line(bd, cumulative[bd]))
 
     lines += [
         "",
